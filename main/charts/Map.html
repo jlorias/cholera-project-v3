@@ -1,0 +1,143 @@
+<html>
+<head>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!--Semantic UI-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css">
+</head>
+
+<body>
+<div class="ui raised padded text five column divided grid">
+  <div class="row">
+    <div class=" ui centered large header column">
+      <a href="DeathsAndAttacks.html">Attacks and Deaths</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="Naples.html">Naples Age Data</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="UkCensus.html">UK Census Data</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="Map.html">Map Data</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="About.html">About</a>
+    </div>
+  </div>
+  <div class="ui divider"></div>
+</div>
+
+<div id="map"></div>
+
+<script>
+
+  Plotly.d3.csv('../cholera-data/choleraDeathLocations.csv', function (err, rows) {
+    Plotly.d3.csv("../cholera-data/choleraPumpLocations.csv", function (err2, rows2) {
+      function unpack(rows, key) {
+        return rows.map(function (row) {
+          return row[key];
+        });
+      }
+
+      let pumpLocLon = [];
+      let pumpLocLat = [];
+
+      //console.log(rows2);
+
+      pumpLocLon.push(Object.keys(rows2[0])[0]);
+      pumpLocLat.push(Object.keys(rows2[0])[1]);
+
+
+      for (let i = 0; i < rows2.length; i++) {
+        pumpLocLat.push(rows2[i]["51.513341"]);
+        pumpLocLon.push(rows2[i]["-0.136668"]);
+      }
+
+      let data = [{
+        type: 'scattermapbox',
+        mode: 'markers',
+        text: unpack(rows, 'Deaths'),
+        lon: unpack(rows, 'Longitude'),
+        lat: unpack(rows, 'Latitude'),
+        marker: {
+          color: 'rgb(255, 3, 3)',
+          autocolorscale: false,
+          cmin: 0,
+          cmax: 20,
+          reversescale: false,
+          opacity: 0.59,
+          size: unpack(rows, 'Deaths'),
+          sizeref: 0.3333333333
+        },
+        name: 'Deaths'
+      }];
+
+      let pumpData = [{
+        type: 'scattermapbox',
+        mode: 'markers',
+        opacity: 0.5,
+        lon: pumpLocLon,
+        lat: pumpLocLat,
+        marker: {
+          symbol: 'square',
+          size: 15,
+          color: 'rgb(0,0,0)'
+        },
+        name: 'Pump'
+      }];
+
+      let layout = {
+        height: 1000,
+        width: 2114.44,
+        dragmode: 'zoom',
+        title: 'Cholera Death Location vs. Water Pump Location in London - August 19th, 1854 to September 29th, 1854',
+        mapbox: {
+          center: {
+            lat: 51.51289,
+            lon: -0.136523
+          },
+          domain: {
+            x: [0, 1],
+            y: [0, 1]
+          },
+          style: 'dark',
+          zoom: 16.1
+        },
+        margin: {
+          r: 0,
+          t: 0,
+          b: 0,
+          l: 0,
+          pad: 0
+        },
+        showlegend: true,
+        legend: {
+          x: 0,
+          y: 1,
+          traceorder: 'normal',
+          font: {
+            family: 'sans-serif',
+            size: 12,
+            color: '#000'
+          },
+          sizeref: 0.3333,
+          bgcolor: '#E2E2E2',
+          bordercolor: '#FFFFFF',
+          borderwidth: 2
+        }
+      };
+
+      Plotly.setPlotConfig({
+        mapboxAccessToken: 'pk.eyJ1IjoiaWRlbWVsbG8iLCJhIjoiY2ptNnFiZmc5MDJoZzNwdXE2aXhiYXNqdCJ9.qKCVHMu9enwE6uzCJRDgFw'
+      });
+
+      Plotly.newPlot('map', data, layout);
+      Plotly.plot('map', pumpData, layout);
+    })
+  });
+
+</script>
+
+</body>
+</html>

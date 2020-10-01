@@ -1,0 +1,134 @@
+<html>
+<head>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!--Semantic UI-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css">
+</head>
+
+<body>
+<div class="ui raised padded text five column divided grid">
+  <div class="row">
+    <div class=" ui centered large header column">
+      <a href="DeathsAndAttacks.html">Attacks and Deaths</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="Naples.html">Naples Age Data</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="UkCensus.html">UK Census Data</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="Map.html">Map Data</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="About.html">About</a>
+    </div>
+  </div>
+  <div class="ui divider"></div>
+</div>
+
+<div class="ui fluid container">
+  <div id="line"></div>
+  <div id="table"></div>
+</div>
+
+<script>
+
+  fetch("../cholera-data/DeathAttackData.json")
+      .then(response => {
+        return response.json();
+      })
+      .then(file => {
+        let dates = [], deaths = [], attacks = [];
+        let totalAttacks = [], totalDeaths = [];
+
+        for (let i = 0; i < file.length; i++) {
+          dates.push(file[i]['Date']);
+          deaths.push(parseInt(file[i]['Death']));
+          attacks.push(parseInt(file[i]['Attack']));
+        }
+
+        attacks.reduce((prev, curr, i) => {
+          return totalAttacks[i] = prev + curr
+        }, 0);
+        deaths.reduce((prev, curr, i) => {
+          return totalDeaths[i] = prev + curr
+        }, 0);
+
+        let cellValues = [dates, attacks, deaths, totalAttacks, totalDeaths];
+        let tableData = [{
+
+          type: 'table',
+          columnwidth: [200, 200, 200, 200, 200],
+          columnorder: [0, 1, 2, 3, 4],
+          header: {
+            values: [["<b>Date</b>"], ["<b>Attacks</b>"],
+              ["<b>Deaths</b>"], ["<b>Total Attacks</b>"], ["<b>Total Deaths</b>"]],
+            align: "center",
+            line: { width: 1, color: '#7B7B7B' },
+            fill: { color: ['#898686'] },
+            font: { family: "Arial", size: 11, color: "white" }
+          },
+          cells: {
+            values: cellValues,
+            align: ["center", "center"],
+            line: { color: "grey", width: 1 },
+            fill: { color: ['#EEEEEE', '#ffffff', '#ffffff', '#ffffff', '#ffffff'] },
+            font: { family: "Arial", size: 10, color: ["black"] }
+          }
+
+        }];
+
+        let line1 = {
+          x: dates,
+          y: deaths,
+          name: 'Deaths',
+          mode: 'lines'
+        };
+
+        let line2 = {
+          x: dates,
+          y: attacks,
+          name: 'Attacks',
+          mode: 'lines'
+        };
+
+        let line3 = {
+          x: dates,
+          y: totalAttacks,
+          name: 'Total Attacks',
+          mode: 'lines'
+        };
+
+        let line4 = {
+          x: dates,
+          y: totalDeaths,
+          name: 'Total Deaths',
+          mode: 'lines'
+        };
+
+        let lineData = [line1, line2, line3, line4];
+
+        const layout = {
+          title: "Exhibition of Symptoms and Deaths Caused by Cholera from August 19th, 1854 to September 29th 1854",
+          height: 500
+        };
+
+        const lineLayout = {
+          title: 'Attacks and Deaths over Time, London August 19 - September 29, 1854',
+          xaxis: {
+            title: 'Date'
+          },
+          yaxis: {
+            title: '# of occurences'
+          }
+        };
+
+        Plotly.plot('line', lineData, lineLayout);
+        Plotly.plot('table', tableData, layout);
+      });
+</script>
+
+</body>
+</html>

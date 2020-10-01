@@ -1,0 +1,140 @@
+<html>
+<head>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!--Semantic UI-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css">
+</head>
+
+<body>
+<div class="ui raised padded text five column divided grid">
+  <div class="row">
+    <div class=" ui centered large header column">
+      <a href="DeathsAndAttacks.html">Attacks and Deaths</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="Naples.html">Naples Age Data</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="UkCensus.html">UK Census Data</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="Map.html">Map Data</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="About.html">About</a>
+    </div>
+  </div>
+  <div class="ui divider"></div>
+</div>
+
+<div class="ui two column divided grid">
+  <div class="column">
+    <div id="maleBarChart"></div>
+  </div>
+  <div class="column">
+    <div id="femaleBarChart"></div>
+  </div>
+</div>
+<div id="table"></div>
+
+<script>
+
+  fetch("../cholera-data/NaplesData.json")
+      .then(response => {
+        return response.json();
+      })
+      .then(file => {
+        //instantiate variables
+        let naplesAgeRange = [], femaleNaplesDeaths = [], maleNaplesDeaths = [];
+
+        for (let i = 0; i < file.length; i++) {
+          naplesAgeRange.push(file[i]['age']);
+          femaleNaplesDeaths.push(parseInt(file[i]['female']));
+          maleNaplesDeaths.push(parseInt(file[i]['male']));
+        }
+
+
+        let cellValues = [naplesAgeRange, femaleNaplesDeaths, maleNaplesDeaths];
+        let tableData = [{
+          type: 'table',
+          columnwidth: [200, 200, 200],
+          columnorder: [0, 1, 2],
+          header: {
+            values: [["<b>Age Range</b>"], ["<b>Females</b>"], ["<b>Males</b>"]],
+            align: "center",
+            line: { width: 1, color: '#7B7B7B' },
+            fill: { color: ['#898686'] },
+            font: { family: "Arial", size: 11, color: "white" }
+          },
+          cells: {
+            values: cellValues,
+            align: ["center", "center"],
+            line: { color: "#7B7B7B", width: 1 },
+            fill: { color: ['#EEEEEE', '#ffffff', '#ffffff'] },
+            font: { family: "Arial", size: 10, color: ["black"] }
+          }
+
+        }];
+
+        const layout = {
+          title: 'Males and Females in Naples per 10,000 Inhabitants by Age Range - August 19th, 1854 to September 29th, 1854'
+        };
+
+        let maleBarData = [
+          {
+            x: naplesAgeRange,
+            y: maleNaplesDeaths,
+            type: 'bar',
+            marker: {
+              color: '#4897D8'
+            }
+          }
+        ];
+
+        let femaleBarData = [
+          {
+            x: naplesAgeRange,
+            y: femaleNaplesDeaths,
+            type: 'bar',
+            marker: {
+              color: '#FA6E59'
+            }
+          }
+        ];
+
+        const mBarLayout = {
+
+          title: 'Male Deaths in Naples per 10,000 Inhabitants by Age Range - August 19th, 1854 to September 29th, 1854',
+          xaxis: {
+            tickangle: -45,
+            title: 'Age Range'
+          },
+          yaxis: {
+            title: 'Number of Deaths'
+          },
+          marker:{
+            color: '#4897D8'
+          }
+        };
+
+        const fBarLayout = {
+
+          title: 'Female Deaths in Naples per 10,000 Inhabitants by Age Range - August 19th, 1854 to September 29th, 1854',
+          xaxis: {
+            tickangle: -45,
+            title: 'Age Range'
+          },
+          yaxis: {
+            title: 'Number of Deaths'
+          }
+        };
+
+        Plotly.newPlot('maleBarChart', maleBarData, mBarLayout);
+        Plotly.newPlot('femaleBarChart', femaleBarData, fBarLayout);
+        Plotly.plot('table', tableData, layout);
+      });
+</script>
+
+</body>
+</html>

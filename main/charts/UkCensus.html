@@ -1,0 +1,203 @@
+<html>
+<head>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!--Semantic UI-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css">
+</head>
+
+<body>
+<div class="ui raised padded text five column divided grid">
+  <div class="row">
+    <div class=" ui centered large header column">
+      <a href="DeathsAndAttacks.html">Attacks and Deaths</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="Naples.html">Naples Age Data</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="UkCensus.html">UK Census Data</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="Map.html">Map Data</a>
+    </div>
+    <div class=" ui centered large header column">
+      <a href="About.html">About</a>
+    </div>
+  </div>
+  <div class="ui divider"></div>
+</div>
+
+<div class="ui two column divided grid">
+  <div class="column">
+    <div id="maleBarChart"></div>
+  </div>
+  <div class="column">
+    <div id="femaleBarChart"></div>
+  </div>
+</div>
+
+<div class="ui three column divided grid">
+  <div class="column">
+    <div id="malePieChart"></div>
+  </div>
+
+  <div class="column">
+    <div id="femalePieChart"></div>
+  </div>
+  <div class="column">
+    <div id="totalPieChart"></div>
+  </div>
+</div>
+<div id="table"></div>
+
+<script>
+
+  fetch("../cholera-data/UKData.json")
+      .then(response => {
+        return response.json();
+      })
+      .then(file => {
+        //instantiate variables
+        let ukAgeRange = [], femaleUkDeaths = [], maleUkDeaths = [];
+
+        for (let i = 0; i < file.length; i++) {
+          ukAgeRange.push(file[i]['age']);
+          femaleUkDeaths.push(parseInt(file[i]['female']));
+          maleUkDeaths.push(parseInt(file[i]['male']));
+        }
+
+        const totalFemalesUK = femaleUkDeaths.reduce((a, b) => { return a + b }, 0);
+        const totalMalesUk = maleUkDeaths.reduce((a, b) => { return a + b }, 0);
+
+        let cellValues = [ukAgeRange, femaleUkDeaths, maleUkDeaths];
+        let tableData = [{
+          type: 'table',
+          columnwidth: [200, 200, 200],
+          columnorder: [0, 1, 2],
+          header: {
+            values: [["<b>Age Range</b>"], ["<b>Females</b>"], ["<b>Males</b>"]],
+            align: "center",
+            line: { width: 1, color: '#7B7B7B' },
+            fill: { color: ['#898686'] },
+            font: { family: "Arial", size: 11, color: "white" }
+          },
+          cells: {
+            values: cellValues,
+            align: ["center", "center"],
+            line: { color: "#7B7B7B", width: 1 },
+            fill: { color: ['#EEEEEE', '#ffffff', '#ffffff'] },
+            font: { family: "Arial", size: 10, color: ["black"] }
+          }
+
+        }];
+
+        const layout = {
+          title: 'Males and Females in the UK by Age Range - August 19th, 1854 to September 29th, 1854'
+        };
+
+        var maleBarData = [
+          {
+            x: ukAgeRange,
+            y: maleUkDeaths,
+            type: 'bar',
+            marker: {
+              color: '#4897D8'
+            }
+          }
+        ];
+
+        var femaleBarData = [
+          {
+            x: ukAgeRange,
+            y: femaleUkDeaths,
+            type: 'bar',
+            marker: {
+              color: '#FA6E59'
+            }
+          }
+        ];
+
+        const mBarLayout = {
+
+          title: 'Male Deaths in the UK by Age Range - August 19th, 1854 to September 29th, 1854',
+          xaxis: {
+            tickangle: -45,
+            title: 'Age Range'
+          },
+          yaxis: {
+            title: 'Number of Deaths'
+          },
+          marker:{
+            color: '#4897D8'
+          }
+        };
+
+        const fBarLayout = {
+
+          title: 'Female Deaths in the UK by Age Range - August 19th, 1854 to September 29th, 1854',
+          xaxis: {
+            tickangle: -45,
+            title: 'Age Range'
+          },
+          yaxis: {
+            title: 'Number of Deaths'
+          }
+        };
+
+        // bie and par charts
+        let malePieData = [{
+          values: maleUkDeaths,
+          labels: ukAgeRange,
+          type: 'pie'
+        }];
+
+        let femalePieData = [{
+          values: femaleUkDeaths,
+          labels: ukAgeRange,
+          type: 'pie'
+        }];
+
+
+        let totalPieData = [{
+          values: [totalMalesUk, totalFemalesUK],
+          labels: ['Male', 'Female'],
+          marker: {
+            colors: ['#4897D8','#FA6E59']
+          },
+          type: 'pie'
+        }];
+
+
+        let femaleLayout = {
+          title: 'Females by Age Range',
+          piecolorway: ["#ffffcc", "#ffeda0", "#fed976", "#feb24c", "#fd8d3c", "#fc4e2a", "#e31a1c", "#bd0026", "#800026"],
+          height: 400,
+          width: 500
+        };
+
+        let maleLayout = {
+          title: 'Males by Age Range',
+          piecolorway: ["#f7fbff", "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", "#08306b"],
+          height: 400,
+          width: 500
+        };
+
+        let totalLayout = {
+          title: 'Total Male Population v. Total Female Population',
+          height: 400,
+          width: 500
+
+        };
+
+        Plotly.newPlot('maleBarChart', maleBarData, mBarLayout);
+        Plotly.newPlot('femaleBarChart', femaleBarData, fBarLayout);
+        Plotly.newPlot('malePieChart', malePieData, maleLayout);
+        Plotly.newPlot('femalePieChart', femalePieData, femaleLayout);
+        Plotly.newPlot('totalPieChart', totalPieData, totalLayout);
+        Plotly.plot('table', tableData, layout);
+      });
+</script>
+
+</body>
+</html>

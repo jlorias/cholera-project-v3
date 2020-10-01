@@ -1,0 +1,18 @@
+{
+  "name": "cholera-project-v3",
+  "version": "1.0.0",
+  "description": "ICS 484 Cholera project 1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "cholera-project-v3"
+  },
+  "author": "jlorias",
+  "license": "ISC",
+  "dependencies": {
+    "plotly.js-dist": "^1.56.0"
+  }
+}
