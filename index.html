@@ -1,45 +1,44 @@
-<html>
+<html lang="en">
 <head>
   <!-- Plotly.js -->
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <!--Semantic UI-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css">
+  <title>Home</title>
 </head>
 <body>
-<div class="ui raised padded text five column divided grid">
-  <div class="row">
-    <div class=" ui centered large header column">
-      <a href="./main/charts/DeathsAndAttacks.html">Attacks and Deaths</a>
-    </div>
-    <div class=" ui centered large header column">
-      <a href="./main/charts/Naples.html">Naples Age Data</a>
-    </div>
-    <div class=" ui centered large header column">
-      <a href="./main/charts/UkCensus.html">UK Census Data</a>
-    </div>
-    <div class=" ui centered large header column">
-      <a href="./main/charts/Map.html">Map Data</a>
-    </div>
-    <div class=" ui centered large header column">
-      <a href="index.html">About</a>
-    </div>
-  </div>
+<div class="ui five item tabular header menu">
+  <a class="item" href="./main/charts/DeathsAndAttacks.html">Attacks and Deaths</a>
+  <a class="item" href="./main/charts/Naples.html">Naples Age Data</a>
+  <a class="item" href="./main/charts/UkCensus.html">UK Census Data</a>
+  <a class="item" href="./main/charts/Map.html">Map Data</a>
+  <a class="red active item" href="index.html">About</a>
   <div class="ui divider"></div>
 </div>
 
-<div class="ui raised very padded text container segment">
-  <h2>Author</h2>
-  <p>Jianna Orias<br/>Computer Engineering<br/>University of Hawaii at Manoa</p>
-
-  <h2>
-    Frameworks:
-  </h2>
-  <p>The majority of this work was done using the following: <br /></p>
-    <ul>
-      <li><a href=https://plot.ly>plot.ly</a></li>
-      <li>HTML, CSS, and Javascript</li>
-      <li><a href=https://semantic-ui.com> semantic UI</a></li>
-    </ul>
+<div class="ui vertically divided grid">
+  <div class="two column row">
+    <div class="ui column">
+      <div class="ui centered fluid image">
+        <img src="https://mediad.publicbroadcasting.net/p/shared/npr/styles/x_large/nprshared/202007/850037264.jpg" alt="Picture of People Dying of Cholera">
+      </div>
+    </div>
+    <div class="column">
+      <h1 class="ui header">Author</h1>
+      <h3 class="ui header">Jianna Orias<br/>Computer Engineering<br/>University of Hawaii at Manoa</h3>
+      <h1 class="ui header">Frameworks:</h1>
+      <h3 class="ui header">The majority of this work was done using the following: <br /></h3>
+      <ul>
+        <li><a href=https://plot.ly>plot.ly</a></li>
+        <li>HTML, CSS, and Javascript</li>
+        <li><a href=https://semantic-ui.com> semantic UI</a></li>
+      </ul>
+      <p>The purpose of this project is to showcase datasets of Cholera
+        deaths and attacks of affected males and females in the UK and Naples. This data
+        was transformed into visual representations such as bar, pie, and line charts, and
+        maps.</p>
+    </div>
+  </div>
 </div>
 </body>
 </html>
